@@ -20,5 +20,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "20"
-      - key: NEXT_PUBLIC_API_URL
-        value: "https://app-rank-monitor-api.onrender.com"
+      - key: API_URL
+        fromService:
+          type: web
+          name: app-rank-monitor-api
+          property: hostport
