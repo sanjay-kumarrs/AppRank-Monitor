@@ -47,7 +47,14 @@ export default function Dashboard() {
         }
         
         const rankingsData = await rankRes.json();
+        if (rankingsData && rankingsData.error) {
+          throw new Error(`Rankings API error: ${rankingsData.error}`);
+        }
+        
         const categoriesData = await catRes.json();
+        if (categoriesData && categoriesData.error) {
+          throw new Error(`Categories API error: ${categoriesData.error}`);
+        }
         
         setRankings(Array.isArray(rankingsData) ? rankingsData : []);
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
