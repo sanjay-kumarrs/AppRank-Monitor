@@ -2,6 +2,7 @@ import os
 import json
 import duckdb
 import uvicorn
+import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -25,10 +26,10 @@ async def get_rankings():
         return {"error": f"CSV file not found at {CSV_FILE_PATH}"}
         
     try:
-        # DuckDB ഉപയോഗിച്ച് CSV വായിക്കുന്നു
+        # Pandas ഉപയോഗിച്ച് CSV വായിക്കുന്നു, ശേഷം DuckDB ഉപയോഗിച്ച് ക്വറി ചെയ്യുന്നു
+        df_csv = pd.read_csv(CSV_FILE_PATH)
         conn = duckdb.connect()
-        query = f"SELECT * FROM read_csv_auto('{CSV_FILE_PATH}')"
-        df = conn.execute(query).df()
+        df = conn.execute("SELECT * FROM df_csv").df()
         
         # ഡാറ്റ ഡിക്ഷണറിയാക്കി മാറ്റുന്നു
         data = df.to_dict(orient='records')
@@ -50,9 +51,9 @@ async def get_categories():
         return {"error": f"CSV file not found at {CSV_FILE_PATH}"}
         
     try:
+        df_csv = pd.read_csv(CSV_FILE_PATH)
         conn = duckdb.connect()
-        query = f"SELECT DISTINCT category FROM read_csv_auto('{CSV_FILE_PATH}')"
-        df = conn.execute(query).df()
+        df = conn.execute("SELECT DISTINCT category FROM df_csv").df()
         categories = df['category'].dropna().unique().tolist()
         return categories
     except Exception as e:
