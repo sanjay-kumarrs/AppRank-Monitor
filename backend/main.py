@@ -44,5 +44,20 @@ async def get_rankings():
     except Exception as e:
         return {"error": str(e)}
 
+@app.get("/api/categories")
+async def get_categories():
+    if not os.path.exists(CSV_FILE_PATH):
+        return {"error": f"CSV file not found at {CSV_FILE_PATH}"}
+        
+    try:
+        conn = duckdb.connect()
+        query = f"SELECT DISTINCT category FROM read_csv_auto('{CSV_FILE_PATH}')"
+        df = conn.execute(query).df()
+        categories = df['category'].dropna().unique().tolist()
+        return categories
+    except Exception as e:
+        return {"error": str(e)}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
