@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata = {
-  title: "EV Rail Intelligence",
-  description: "Global EV Charging Network",
+  title: "Infocreon - App Store Ranking Tracker",
+  description: "A web-based tool to track and monitor mobile application rankings on the App Store.",
 };
 
 export default function RootLayout({
