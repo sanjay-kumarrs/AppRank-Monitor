@@ -35,7 +35,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
         const rankRes = await fetch(`${apiBase}/api/rankings`);
         if (!rankRes.ok) {
           throw new Error(`Rankings API returned status ${rankRes.status} (${rankRes.statusText})`);
