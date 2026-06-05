@@ -30,25 +30,30 @@ export default function Dashboard() {
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const rankRes = await fetch('/api/rankings');
-        const catRes = await fetch('/api/categories');
+        if (!rankRes.ok) {
+          throw new Error(`Rankings API returned status ${rankRes.status} (${rankRes.statusText})`);
+        }
         
-        if (!rankRes.ok || !catRes.ok) throw new Error('API Sync Failed');
+        const catRes = await fetch('/api/categories');
+        if (!catRes.ok) {
+          throw new Error(`Categories API returned status ${catRes.status} (${catRes.statusText})`);
+        }
         
         const rankingsData = await rankRes.json();
         const categoriesData = await catRes.json();
         
         setRankings(Array.isArray(rankingsData) ? rankingsData : []);
         setCategories(Array.isArray(categoriesData) ? categoriesData : []);
-        setError(false);
+        setError(null);
       } catch (err) {
         console.error("Fetch Error:", err);
-        setError(true);
+        setError(err instanceof Error ? err.message : String(err));
       } finally {
         setLoading(false);
       }
@@ -87,7 +92,7 @@ export default function Dashboard() {
       {loading ? (
         <div className="h-64 flex items-center justify-center">Loading Data...</div>
       ) : error ? (
-        <div className="h-64 flex items-center justify-center text-red-400">Error: Could not connect to API.</div>
+        <div className="h-64 flex items-center justify-center text-red-400">Error: {error}</div>
       ) : (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-4">
           <table className="w-full text-left">
