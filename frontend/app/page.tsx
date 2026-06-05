@@ -35,12 +35,13 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const rankRes = await fetch('/api/rankings');
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
+        const rankRes = await fetch(`${apiBase}/api/rankings`);
         if (!rankRes.ok) {
           throw new Error(`Rankings API returned status ${rankRes.status} (${rankRes.statusText})`);
         }
         
-        const catRes = await fetch('/api/categories');
+        const catRes = await fetch(`${apiBase}/api/categories`);
         if (!catRes.ok) {
           throw new Error(`Categories API returned status ${catRes.status} (${catRes.statusText})`);
         }
