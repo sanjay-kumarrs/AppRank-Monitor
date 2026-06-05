@@ -35,9 +35,8 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'https://app-rank-monitor-api.onrender.com';
-        const rankRes = await fetch(`${apiBase}/api/rankings`);
-        const catRes = await fetch(`${apiBase}/api/categories`);
+        const rankRes = await fetch('/api/rankings');
+        const catRes = await fetch('/api/categories');
         
         if (!rankRes.ok || !catRes.ok) throw new Error('API Sync Failed');
         
